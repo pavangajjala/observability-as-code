@@ -1,0 +1,37 @@
+# Service catalog: the only file most teams need to touch.
+# Adding a service here creates its monitors, SLO and dashboard.
+#
+#   tier 1  customer-facing and revenue-critical; pages on-call in prod, needs an SLO
+#   tier 2  important but degradable; alerts go to the team channel
+#   tier 3  internal or batch; alerts once, no repeats
+
+defaults:
+  envs: [prod, staging]
+
+services:
+  checkout-api:
+    team: payments
+    tier: 1
+    slo_target: 99.9
+    notify:
+      page: "@pagerduty-payments"
+      channel: "@slack-payments-alerts"
+    runbook_url: https://runbooks.example.com/checkout-api
+    error_rate: {warning: 1, critical: 3}
+    latency_p95_seconds: {warning: 0.3, critical: 0.8}
+
+  catalog-api:
+    team: storefront
+    tier: 2
+    slo_target: 99.5
+    notify:
+      channel: "@slack-storefront-alerts"
+    runbook_url: https://runbooks.example.com/catalog-api
+
+  report-worker:
+    team: data
+    tier: 3
+    envs: [prod]
+    notify:
+      channel: "@slack-data-alerts"
+    latency_p95_seconds: {warning: 20, critical: 60}
