@@ -5,3 +5,4 @@
 *.auto.tfvars
 __pycache__/
 .pytest_cache/
+modules/**/.terraform.lock.hcl
